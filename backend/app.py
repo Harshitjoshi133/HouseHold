@@ -33,8 +33,21 @@ def create_app(config_name='default'):
         app.wsgi_app = ProxyFix(app.wsgi_app)
         
         # Initialize CORS
-        CORS(app, resources={r"/api/*": {"origins": "*"}})
-        logger.info("CORS initialized successfully")
+        CORS(app, resources={
+            r"/api/*": {
+                "origins": [
+                    "https://house-hold-one.vercel.app",
+                    "http://localhost:3000",
+                    "http://localhost:8080",
+                    "http://127.0.0.1:3000",
+                    "http://127.0.0.1:8080"
+                ],
+                "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+                "allow_headers": ["Content-Type", "Authorization", "X-Requested-With"],
+                "supports_credentials": True
+            }
+        })
+        logger.info("CORS initialized successfully with specific origins")
         
         # Initialize database
         db.init_app(app)
