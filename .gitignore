@@ -342,7 +342,7 @@ Thumbs.db
 *.old
 
 # Configuration files with sensitive data
-config.py
+
 instance/
 .env
 
