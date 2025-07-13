@@ -66,16 +66,27 @@ def create_app(config_name='default'):
             logger.warning(f"Redis connection failed: {e}")
             app.redis = None
         
-        # Initialize Celery
-        celery.conf.update(app.config)
-        
-        class ContextTask(celery.Task):
-            def __call__(self, *args, **kwargs):
-                with app.app_context():
-                    return self.run(*args, **kwargs)
-        
-        celery.Task = ContextTask
-        logger.info("Celery initialized successfully")
+        # Initialize Celery (with fcntl compatibility)
+        try:
+            # Import compatibility module if available
+            try:
+                import compat
+            except ImportError:
+                pass
+            
+            celery.conf.update(app.config)
+            
+            class ContextTask(celery.Task):
+                def __call__(self, *args, **kwargs):
+                    with app.app_context():
+                        return self.run(*args, **kwargs)
+            
+            celery.Task = ContextTask
+            logger.info("Celery initialized successfully")
+        except Exception as e:
+            logger.warning(f"Celery initialization failed: {e}")
+            logger.info("Continuing without Celery support")
+            app.celery = None
         
         # Register blueprints
         try:

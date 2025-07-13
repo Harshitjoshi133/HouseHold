@@ -16,6 +16,9 @@ def main():
     os.environ.setdefault('FLASK_ENV', 'production')
     os.environ.setdefault('FLASK_DEBUG', '0')
     
+    # Get current directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    
     # Check if we're in the right directory
     if not Path('app.py').exists():
         print("❌ Error: app.py not found. Please run this script from the backend directory.")
@@ -37,11 +40,15 @@ def main():
     
     # Start Gunicorn
     try:
+        # Set working directory to backend
+        os.chdir(current_dir)
+        
+        # Run gunicorn with proper environment
         subprocess.run([
             sys.executable, '-m', 'gunicorn',
             '-c', 'gunicorn.conf.py',
             'wsgi:app'
-        ])
+        ], cwd=current_dir)
     except KeyboardInterrupt:
         print("\n🛑 Server stopped by user")
     except Exception as e:

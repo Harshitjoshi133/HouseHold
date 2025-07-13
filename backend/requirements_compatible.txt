@@ -14,3 +14,6 @@ flask_mail
 psycopg2-binary==2.9.9
 Flask-Migrate==4.0.5
 gunicorn==21.2.0
+# Add these for better compatibility
+billiard==4.2.1
+kombu==5.3.4 
