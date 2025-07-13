@@ -1,0 +1,2 @@
+id,username,email,password_hash,role,full_name,phone_number,address,pin_code,created_at,is_active
+1,admin,admin@example.com,pbkdf2:sha256:600000$your_hash_here,admin,Administrator,,,,2025-07-13 11:35:45.747310,True
