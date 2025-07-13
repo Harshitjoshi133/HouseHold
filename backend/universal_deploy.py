@@ -16,6 +16,25 @@ def main():
     os.environ.setdefault('FLASK_ENV', 'production')
     os.environ.setdefault('FLASK_DEBUG', '0')
     
+    # Get current directory and ensure we're in the backend directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(current_dir)
+    
+    # Add current directory to Python path
+    if current_dir not in sys.path:
+        sys.path.insert(0, current_dir)
+    
+    print(f"📁 Working directory: {current_dir}")
+    
+    # Check if required files exist
+    required_files = ['app.py', 'config.py']
+    for file in required_files:
+        if not os.path.exists(file):
+            print(f"❌ Error: {file} not found in {current_dir}")
+            sys.exit(1)
+    
+    print("✅ All required files found")
+    
     # Detect platform
     is_windows = platform.system() == 'Windows'
     is_linux = platform.system() == 'Linux'
@@ -59,7 +78,7 @@ def main():
                 '--workers', '2',
                 '--timeout', '30',
                 'app:app'
-            ])
+            ], cwd=current_dir)
         except KeyboardInterrupt:
             print("\n🛑 Server stopped by user")
         except Exception as e:
